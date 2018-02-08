@@ -5,8 +5,7 @@
     \brief bits.hpp contains the sdsl::bits class.
 	\author Simon Gog
 */
-#ifndef INCLUDED_SDSL_BITS
-#define INCLUDED_SDSL_BITS
+#pragma once
 
 #include <stdint.h> // for uint64_t uint32_t declaration
 #include <iostream> // for cerr
@@ -21,6 +20,8 @@
 #ifdef WIN32
 #include "iso646.h"
 #endif
+
+namespace tdc {
 
 //! Namespace for the succinct data structure library.
 namespace sdsl {
@@ -928,4 +929,4 @@ using bits = bits_impl<>;
 
 } // end namespace sdsl
 
-#endif
+}
