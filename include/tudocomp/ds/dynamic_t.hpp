@@ -1,7 +1,5 @@
 #pragma once
 
-#include <tudocomp/util/IntegerBase.hpp>
-
 #include <cstdint>
 
 namespace tdc {
