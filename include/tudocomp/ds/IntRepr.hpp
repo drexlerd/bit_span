@@ -2,8 +2,7 @@
 
 #include <type_traits>
 
-#include <sdsl/bits.hpp>
-
+#include <tudocomp/util/bits.hpp>
 #include <tudocomp/ds/uint_t.hpp>
 #include <tudocomp/ds/dynamic_t.hpp>
 

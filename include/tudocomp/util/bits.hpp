@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "sdsl_bits.hpp"
+
 namespace tdc {
     /// \brief Computes the highest set bit in an integer variable
     inline constexpr uint_fast8_t bits_hi(uint64_t x) {

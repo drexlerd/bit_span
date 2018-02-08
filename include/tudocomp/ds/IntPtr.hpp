@@ -15,13 +15,13 @@
 #include <utility>
 #include <climits>
 
+#include <glog/logging.h>
+
 #include <tudocomp/ds/IntRepr.hpp>
 #include <tudocomp/ds/uint_t.hpp>
 #include <tudocomp/ds/dynamic_t.hpp>
 #include <tudocomp/util/IntegerBase.hpp>
-
-#include <sdsl/bits.hpp>
-#include <glog/logging.h>
+#include <tudocomp/util/bits.hpp>
 
 /// \cond INTERNAL
 
