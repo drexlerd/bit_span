@@ -17,10 +17,10 @@ namespace tdc {namespace int_vector {
 
     struct DynamicWidthMemRw {
         inline static void write_int(uint64_t* word, uint64_t x, uint8_t offset, const uint8_t len) {
-            sdsl::bits::write_int(word, x, offset, len);
+            sdsl_bits::write_int(word, x, offset, len);
         }
         inline static uint64_t read_int(const uint64_t* word, uint8_t offset, const uint8_t len) {
-            return sdsl::bits::read_int(word, offset, len);
+            return sdsl_bits::read_int(word, offset, len);
         }
     };
     struct BitWidthMemRw {

@@ -72,8 +72,6 @@ namespace std {
 
 namespace tdc {
 namespace int_vector {
-    using sdsl::bits;
-
     template<class T>
     struct IntPtrBase {};
 
@@ -129,14 +127,14 @@ namespace int_vector {
 
         Self& operator++() {
             DynamicIntValueType const* tmp = this->m_ptr;
-            bits::move_right(tmp, this->m_bit_offset, this->data_bit_size());
+            sdsl_bits::move_right(tmp, this->m_bit_offset, this->data_bit_size());
             this->m_ptr = (DynamicIntValueType*) tmp;
             return static_cast<Self&>(*this);
         }
 
         Self& operator--() {
             DynamicIntValueType const* tmp = this->m_ptr;
-            bits::move_left(tmp, this->m_bit_offset, this->data_bit_size());
+            sdsl_bits::move_left(tmp, this->m_bit_offset, this->data_bit_size());
             this->m_ptr = (DynamicIntValueType*) tmp;
             return static_cast<Self&>(*this);
         }

@@ -5,6 +5,8 @@
 #include "sdsl_bits.hpp"
 
 namespace tdc {
+    using sdsl_bits = ::tdc::sdsl::bits;
+
     /// \brief Computes the highest set bit in an integer variable
     inline constexpr uint_fast8_t bits_hi(uint64_t x) {
         return x == 0 ? 0 : 64 - __builtin_clzll(x);

@@ -109,7 +109,7 @@ namespace int_vector {
             uint8_t offset = 0;
 
             for (size_t i = 0; i < n; i++) {
-                bits::write_int_and_move(ptr, val, offset, this->width());
+                sdsl_bits::write_int_and_move(ptr, val, offset, this->width());
             }
         }
 
@@ -502,11 +502,11 @@ namespace int_vector {
 
                 // move elements into new width grid
                 for (uint64_t i = 0; i < common_size; i++) {
-                    sdsl::bits::move_left((const uint64_t*&) old_ptr, old_p.offset, old_width);
-                    auto v = sdsl::bits::read_int(           old_ptr, old_p.offset, old_width);
+                    sdsl_bits::move_left((const uint64_t*&) old_ptr, old_p.offset, old_width);
+                    auto v = sdsl_bits::read_int(           old_ptr, old_p.offset, old_width);
 
-                    sdsl::bits::move_left((const uint64_t*&) new_ptr,    new_p.offset, new_width);
-                    sdsl::bits::write_int(                   new_ptr, v, new_p.offset, new_width);
+                    sdsl_bits::move_left((const uint64_t*&) new_ptr,    new_p.offset, new_width);
+                    sdsl_bits::write_int(                   new_ptr, v, new_p.offset, new_width);
                 }
             } else if (old_width > new_width) {
                 // shrink
@@ -519,8 +519,8 @@ namespace int_vector {
 
                 // move elements into new width grid
                 for (uint64_t i = 0; i < common_size; i++) {
-                    auto v = sdsl::bits::read_int_and_move((const uint64_t*&) old_ptr, old_offset, old_width);
-                    sdsl::bits::write_int_and_move(new_ptr, v, new_offset, new_width);
+                    auto v = sdsl_bits::read_int_and_move((const uint64_t*&) old_ptr, old_offset, old_width);
+                    sdsl_bits::write_int_and_move(new_ptr, v, new_offset, new_width);
                 }
 
                 // remove extra bits, dropping as needed
