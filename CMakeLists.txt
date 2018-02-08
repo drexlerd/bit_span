@@ -62,9 +62,10 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     find_or_download_package(SDSL SDSL sdsl)
 endif()
 
-# Sources
-include_directories(include)
-# add_subdirectory(src)
+# Main target
+add_library(bit_span INTERFACE)
+target_link_libraries(bit_span INTERFACE glog sdsl)
+target_include_directories(bit_span INTERFACE include)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     # Unit tests for everything in src
