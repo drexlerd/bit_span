@@ -24,7 +24,7 @@
 namespace tdc {
 
 //! Namespace for the succinct data structure library.
-namespace sdsl {
+namespace tdc_sdsl {
 
 //! A helper class for bitwise tricks on 64 bit words.
 /*!
