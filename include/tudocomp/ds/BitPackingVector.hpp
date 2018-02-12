@@ -546,6 +546,10 @@ namespace int_vector {
         inline void reserve(uint64_t n, uint8_t w) {
             this->bit_reserve(n * w);
         }
+
+        inline size_t stat_allocation_size_in_bytes() const {
+            return this->m_vec.capacity() * sizeof(internal_data_type);
+        }
     };
 
     template<class N>

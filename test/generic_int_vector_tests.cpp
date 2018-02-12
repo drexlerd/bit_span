@@ -1039,6 +1039,8 @@ void generic_int_vector_template() {
 
     ASSERT_EQ(const_conv_1_const_ref, const_conv_2_const_ref);
     ASSERT_EQ(const_conv_1_const_ptr, const_conv_2_const_ptr);
+
+    construct({ 1, 2, 3 }).stat_allocation_size_in_bytes();
 }
 #pragma GCC diagnostic pop
 

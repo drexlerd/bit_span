@@ -80,6 +80,10 @@ namespace int_vector {
         inline static void bit_reserve(backing_data& self, uint64_t n) {
             // TODO: Should this round up to the size of element, and then reserve normally?
         }
+
+        inline static size_t stat_allocation_size_in_bytes(backing_data const& self) {
+            return self.capacity() * sizeof(T);
+        }
     };
 
     template<typename T>
@@ -134,6 +138,10 @@ namespace int_vector {
 
         inline static void bit_reserve(backing_data& self, uint64_t n) {
             self.bit_reserve(n);
+        }
+
+        inline static size_t stat_allocation_size_in_bytes(backing_data const& self) {
+            return self.stat_allocation_size_in_bytes();
         }
     };
 
@@ -496,6 +504,10 @@ namespace int_vector {
         friend bool operator>=(const IntVector<U>& lhs, const IntVector<U>& rhs);
         template<class U>
         friend void swap(IntVector<U>& lhs, IntVector<U>& rhs);
+
+        inline size_t stat_allocation_size_in_bytes() const {
+            return IntVectorTrait<T>::stat_allocation_size_in_bytes(m_data);
+        }
     };
 
     template<class T>
@@ -533,7 +545,6 @@ namespace int_vector {
         using std::swap;
         swap(lhs.m_data, rhs.m_data);
     }
-
 }
 
 /// \copydoc int_vector::IntVector
