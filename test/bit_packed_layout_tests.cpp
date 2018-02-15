@@ -58,3 +58,27 @@ TEST(bit_packed_layout, test2) {
 
     ASSERT_EQ(layout.get_size_in_uint64_t_units(), 4);
 }
+
+TEST(bit_packed_layout, test3) {
+    auto layout = bit_packed_layout_t();
+
+    auto bv = layout.aligned_elements<uint64_t>(1);
+    auto values = layout.bit_packed_elements(15, 3);
+    auto quot_bv = layout.bit_packed_elements(15, 3);
+
+    // [        |        |        ]
+    // [   bv   ]
+    //          [values]
+    //                 [ quot ]
+
+    ASSERT_EQ(bv.bit_offset(), 0);
+    ASSERT_EQ(bv.bit_size(), 64);
+
+    ASSERT_EQ(values.bit_offset(), 64);
+    ASSERT_EQ(values.bit_size(), 3 * 15);
+
+    ASSERT_EQ(quot_bv.bit_offset(), 64 + 3 * 15);
+    ASSERT_EQ(quot_bv.bit_size(), 45);
+
+    ASSERT_EQ(layout.get_size_in_uint64_t_units(), 3);
+}
