@@ -1,5 +1,9 @@
 #pragma once
 
+#include "maybe_bit_packed.hpp"
+
+namespace tdc {
+
 class bit_packed_layout_element_t {
     uint64_t m_bit_offset = 0;
     uint64_t m_bit_size = 0;
@@ -50,9 +54,20 @@ public:
         return aligned_elements(alignof(T), sizeof(T), n);
     }
 
+    template<typename T>
+    constexpr bit_packed_layout_element_t maybe_bit_packed_elements(size_t n, maybe_bit_packed_width_t<T>& meta) {
+        if(meta.needs_alignment()) {
+            return aligned_elements<T>(n);
+        } else {
+            size_t width = meta.get_width();
+            return bit_packed_elements(width, n);
+        }
+    }
+
     constexpr size_t get_size_in_uint64_t_units() const {
         return (m_bit_offset + 63ull) / 64ull;
     }
 
 };
 
+}
