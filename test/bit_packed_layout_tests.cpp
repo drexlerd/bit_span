@@ -10,8 +10,8 @@
 
 using namespace tdc;
 
-TEST(bit_packed_layout, test1) {
-    auto layout = bit_packed_layout_t();
+TEST(bit_layout, test1) {
+    auto layout = bit_layout_t();
 
     auto bv = layout.aligned_elements<uint64_t>(1);
     auto values = layout.aligned_elements<uint32_t>(3);
@@ -35,8 +35,8 @@ TEST(bit_packed_layout, test1) {
     ASSERT_EQ(layout.get_size_in_uint64_t_units(), 5);
 }
 
-TEST(bit_packed_layout, test2) {
-    auto layout = bit_packed_layout_t();
+TEST(bit_layout, test2) {
+    auto layout = bit_layout_t();
 
     auto bv = layout.aligned_elements<uint64_t>(1);
     auto values = layout.aligned_elements<uint32_t>(3);
@@ -59,8 +59,8 @@ TEST(bit_packed_layout, test2) {
     ASSERT_EQ(layout.get_size_in_uint64_t_units(), 4);
 }
 
-TEST(bit_packed_layout, test3) {
-    auto layout = bit_packed_layout_t();
+TEST(bit_layout, test3) {
+    auto layout = bit_layout_t();
 
     auto bv = layout.aligned_elements<uint64_t>(1);
     auto values = layout.bit_packed_elements(15, 3);
@@ -83,8 +83,8 @@ TEST(bit_packed_layout, test3) {
     ASSERT_EQ(layout.get_size_in_uint64_t_units(), 3);
 }
 
-TEST(bit_packed_layout, test4) {
-    auto layout = bit_packed_layout_t();
+TEST(bit_layout, test4) {
+    auto layout = bit_layout_t();
 
     auto bv = layout.aligned_elements<uint64_t>(1);
 
@@ -111,8 +111,8 @@ TEST(bit_packed_layout, test4) {
     ASSERT_EQ(layout.get_size_in_uint64_t_units(), 3);
 }
 
-TEST(bit_packed_layout, test5) {
-    auto layout = bit_packed_layout_t();
+TEST(bit_layout, test5) {
+    auto layout = bit_layout_t();
 
     auto bv = layout.aligned_elements<uint64_t>(1);
 

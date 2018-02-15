@@ -4,12 +4,12 @@
 
 namespace tdc {
 
-class bit_packed_layout_element_t {
+class bit_layout_element_t {
     uint64_t m_bit_offset = 0;
     uint64_t m_bit_size = 0;
 
 public:
-    constexpr bit_packed_layout_element_t(uint64_t bit_offset, uint64_t bit_size):
+    constexpr bit_layout_element_t(uint64_t bit_offset, uint64_t bit_size):
         m_bit_offset(bit_offset),
         m_bit_size(bit_size) {}
 
@@ -18,11 +18,11 @@ public:
 };
 
 
-class bit_packed_layout_t {
+class bit_layout_t {
     uint64_t m_bit_offset = 0;
 
 public:
-    constexpr bit_packed_layout_element_t aligned_elements(size_t align, size_t byte_size, size_t n) {
+    constexpr bit_layout_element_t aligned_elements(size_t align, size_t byte_size, size_t n) {
         static_assert(CHAR_BIT == 8, "sanity check");
 
         size_t align_val = align * CHAR_BIT;
@@ -38,24 +38,24 @@ public:
 
         m_bit_offset += bit_size;
 
-        return bit_packed_layout_element_t(bit_offset, bit_size);
+        return bit_layout_element_t(bit_offset, bit_size);
     }
 
-    constexpr bit_packed_layout_element_t bit_packed_elements(size_t bit_size, size_t n) {
+    constexpr bit_layout_element_t bit_packed_elements(size_t bit_size, size_t n) {
         uint64_t rbit_offset = m_bit_offset;
         uint64_t rbit_size = bit_size * n;
         m_bit_offset += rbit_size;
 
-        return bit_packed_layout_element_t(rbit_offset, rbit_size);
+        return bit_layout_element_t(rbit_offset, rbit_size);
     }
 
     template<typename T>
-    constexpr bit_packed_layout_element_t aligned_elements(size_t n) {
+    constexpr bit_layout_element_t aligned_elements(size_t n) {
         return aligned_elements(alignof(T), sizeof(T), n);
     }
 
     template<typename T>
-    constexpr bit_packed_layout_element_t maybe_bit_packed_elements(size_t n, maybe_bit_packed_width_t<T>& meta) {
+    constexpr bit_layout_element_t maybe_bit_packed_elements(size_t n, maybe_bit_packed_width_t<T> const& meta) {
         if(meta.needs_alignment()) {
             return aligned_elements<T>(n);
         } else {
