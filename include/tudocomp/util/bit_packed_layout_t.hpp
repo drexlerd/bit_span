@@ -38,6 +38,10 @@ struct maybe_bit_packed_pointer_trait_t {
         auto offset = bit_offset / 8;
         return reinterpret_cast<T*>(reinterpret_cast<char*>(base_ptr) + offset);
     }
+
+    static inline void call_destructor(pointer_t p) {
+        p->~T();
+    }
 };
 
 template<typename T>
@@ -59,10 +63,18 @@ struct maybe_bit_packed_pointer_trait_t<T, tdc::void_t<typename IntRepr<T>::IntP
         return int_ptr;
     }
 
+    static inline void call_destructor(pointer_t p) {
+        // NOP (also not implementable as is)
+    }
 };
 
 template<typename T>
 using maybe_bit_packed_pointer_t = typename maybe_bit_packed_pointer_trait_t<T>::pointer_t;
+
+template<typename T>
+inline void call_destructor(maybe_bit_packed_pointer_t<T> ptr) {
+    maybe_bit_packed_pointer_trait_t<T>::call_destructor(ptr);
+}
 
 template<typename T>
 class maybe_bit_packed_layout_element_t: public bit_layout_element_t {

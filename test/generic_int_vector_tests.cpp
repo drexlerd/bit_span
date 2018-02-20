@@ -6,6 +6,7 @@
 #include <tudocomp/ds/IntVector.hpp>
 #include <tudocomp/util/IntegerBase.hpp>
 #include <tudocomp/ds/uint_t.hpp>
+#include <tudocomp/util/bit_packed_layout_t.hpp>
 
 using namespace tdc;
 
@@ -96,6 +97,11 @@ void generic_int_vector_ref_template() {
 
     w = z;
     ASSERT_EQ(w, 0xDEADBEEFu);
+
+    int_vector::call_destructor<T>(a);
+    int_vector::call_destructor<T>(b);
+    int_vector::call_destructor<T>(c);
+    int_vector::call_destructor<T>(d);
 }
 
 TEST(generic_int_vector, int_ref) {
