@@ -192,6 +192,13 @@ namespace int_vector {
 
         ConstIntRef<T> operator[](size_t i) const;
         ConstIntRef<T> operator*() const;
+
+        inline uint64_t const* internal_ptr() const {
+            return this->m_ptr;
+        }
+        inline uint64_t internal_bit_offset() const {
+            return this->m_bit_offset;
+        }
     };
 
     template<class T>
