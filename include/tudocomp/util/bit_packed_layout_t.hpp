@@ -13,6 +13,7 @@ class bit_layout_element_t {
     uint64_t m_bit_element_size = 0;
 
 public:
+    constexpr bit_layout_element_t() {}
     constexpr bit_layout_element_t(uint64_t bit_offset, uint64_t bit_size, uint64_t element_size):
         m_bit_offset(bit_offset),
         m_bit_size(bit_size),
