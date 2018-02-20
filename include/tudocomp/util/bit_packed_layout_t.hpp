@@ -61,9 +61,12 @@ struct maybe_bit_packed_pointer_trait_t<T, tdc::void_t<typename IntRepr<T>::IntP
 };
 
 template<typename T>
+using maybe_bit_packed_pointer_t = typename maybe_bit_packed_pointer_trait_t<T>::pointer_t;
+
+template<typename T>
 class maybe_bit_packed_layout_element_t: public bit_layout_element_t {
 public:
-    using pointer_t = typename maybe_bit_packed_pointer_trait_t<T>::pointer_t;
+    using pointer_t = maybe_bit_packed_pointer_t<T>;
 
     constexpr pointer_t ptr_relative_to(uint64_t* base_ptr) const {
         return maybe_bit_packed_pointer_trait_t<T>::construct_relative_to(base_ptr, bit_offset(), bit_element_size());
