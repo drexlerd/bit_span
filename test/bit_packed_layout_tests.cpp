@@ -261,3 +261,46 @@ TEST(bit_layout, test7) {
     ASSERT_EQ(byte_offset(quot_ptr.internal_ptr()), 16);
     ASSERT_EQ(quot_ptr.internal_bit_offset(), 32);
 }
+
+template<typename T>
+struct Foo {};
+
+template<>
+struct Foo<uint32_t> {
+    using Ref = uint32_t&;
+};
+
+struct RefLike {
+    uint16_t* p;
+
+    RefLike operator=(uint16_t val) {
+        std::cout << "wrapper\n";
+        *p = val;
+
+        return *this;
+    }
+
+    RefLike(uint16_t& real_ref): p(&real_ref) {}
+};
+
+template<>
+struct Foo<uint16_t> {
+    using Ref = RefLike;
+};
+
+template<typename T>
+void test() {
+    T val = 42;
+
+    typename Foo<T>::Ref r = val;
+
+    r = 123;
+
+    ASSERT_EQ(val, 123);
+}
+
+
+TEST(Sandbox, typedef) {
+    test<uint32_t>();
+    test<uint16_t>();
+}
