@@ -103,8 +103,8 @@ void generic_int_vector_ref_template() {
     int_vector::call_destructor<T>(c);
     int_vector::call_destructor<T>(d);
 
-    int_vector::contruct_val_from_ptr<T>(d, c);
-    int_vector::contruct_val_from_rval<T>(d, T(99));
+    int_vector::construct_val_from_ptr<T>(d, c);
+    int_vector::construct_val_from_rval<T>(d, T(99));
 }
 
 TEST(generic_int_vector, int_ref) {

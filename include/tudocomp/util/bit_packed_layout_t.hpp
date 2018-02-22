@@ -43,10 +43,10 @@ struct maybe_bit_packed_pointer_trait_t {
         p->~T();
     }
 
-    static inline void contruct_val_from_ptr(pointer_t dst, pointer_t src) {
+    static inline void construct_val_from_ptr(pointer_t dst, pointer_t src) {
         new(dst) T(std::move(*src));
     }
-    static inline void contruct_val_from_rval(pointer_t dst, T&& src) {
+    static inline void construct_val_from_rval(pointer_t dst, T&& src) {
         new(dst) T(std::move(src));
     }
 };
@@ -73,10 +73,10 @@ struct maybe_bit_packed_pointer_trait_t<T, tdc::void_t<typename IntRepr<T>::IntP
     static inline void call_destructor(pointer_t p) {
         // NOP (also not implementable as is)
     }
-    static inline void contruct_val_from_ptr(pointer_t dst, pointer_t src) {
+    static inline void construct_val_from_ptr(pointer_t dst, pointer_t src) {
         *dst = *src;
     }
-    static inline void contruct_val_from_rval(pointer_t dst, T&& src) {
+    static inline void construct_val_from_rval(pointer_t dst, T&& src) {
         *dst = src;
     }
 };
@@ -89,12 +89,12 @@ inline void call_destructor(maybe_bit_packed_pointer_t<T> ptr) {
     maybe_bit_packed_pointer_trait_t<T>::call_destructor(ptr);
 }
 template<typename T>
-inline void contruct_val_from_ptr(maybe_bit_packed_pointer_t<T> dst, maybe_bit_packed_pointer_t<T> src) {
-    maybe_bit_packed_pointer_trait_t<T>::contruct_val_from_ptr(dst, src);
+inline void construct_val_from_ptr(maybe_bit_packed_pointer_t<T> dst, maybe_bit_packed_pointer_t<T> src) {
+    maybe_bit_packed_pointer_trait_t<T>::construct_val_from_ptr(dst, src);
 }
 template<typename T>
-inline void contruct_val_from_rval(maybe_bit_packed_pointer_t<T> dst, T&& src) {
-    maybe_bit_packed_pointer_trait_t<T>::contruct_val_from_rval(dst, std::move(src));
+inline void construct_val_from_rval(maybe_bit_packed_pointer_t<T> dst, T&& src) {
+    maybe_bit_packed_pointer_trait_t<T>::construct_val_from_rval(dst, std::move(src));
 }
 
 template<typename T>
