@@ -123,16 +123,17 @@ public:
         width_t(cbp_repr_t<T>::width_from_value(value)),
         m_value(std::move(value)) {
     }
-    inline cbp_sized_value_t(value_type&& value, width_t const& width):
+    inline cbp_sized_value_t(value_type&& value, uint8_t width):
         width_t(width),
         m_value(std::move(value)) {
     }
     inline cbp_sized_value_t(value_type const& value):
         cbp_sized_value_t(value_type(value)) {}
-    inline cbp_sized_value_t(value_type const& value, width_t const& width):
+    inline cbp_sized_value_t(value_type const& value, uint8_t width):
         cbp_sized_value_t(value_type(value), width) {}
-    inline width_t const& width() const {
-        return *this;
+
+    inline uint8_t width() const {
+        return this->get_width();
     }
     inline value_type const& value() const {
         return m_value;
