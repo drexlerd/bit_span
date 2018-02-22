@@ -127,6 +127,10 @@ public:
         width_t(width),
         m_value(std::move(value)) {
     }
+    inline cbp_sized_value_t(value_type const& value):
+        cbp_sized_value_t(value_type(value)) {}
+    inline cbp_sized_value_t(value_type const& value, width_t const& width):
+        cbp_sized_value_t(value_type(value), width) {}
     inline width_t const& width() const {
         return *this;
     }
