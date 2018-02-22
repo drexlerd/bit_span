@@ -29,6 +29,7 @@ public:
 template<typename T, typename X = tdc::void_t<>>
 struct maybe_bit_packed_pointer_trait_t {
     using pointer_t = T*;
+    using reference_t = T&;
 
     static constexpr pointer_t construct_relative_to(uint64_t* base_ptr,
                                                      uint64_t bit_offset,
@@ -54,8 +55,7 @@ struct maybe_bit_packed_pointer_trait_t {
 template<typename T>
 struct maybe_bit_packed_pointer_trait_t<T, tdc::void_t<typename IntRepr<T>::IntPtrBase>> {
     using pointer_t = IntPtr<T>;
-
-    using ptr_base_t = IntPtrBase<pointer_t>;
+    using reference_t = IntRef<T>;
 
     static constexpr pointer_t construct_relative_to(uint64_t* base_ptr,
                                                      uint64_t bit_offset,
@@ -63,6 +63,8 @@ struct maybe_bit_packed_pointer_trait_t<T, tdc::void_t<typename IntRepr<T>::IntP
         // Find the uint64_t in which the int pointer starts
         base_ptr += bit_offset / 64;
         bit_offset = bit_offset % 64;
+
+        using ptr_base_t = IntPtrBase<pointer_t>;
 
         auto int_ptr_base = ptr_base_t(base_ptr, bit_offset, bit_element_size);
         auto int_ptr = pointer_t(int_ptr_base);
@@ -83,6 +85,9 @@ struct maybe_bit_packed_pointer_trait_t<T, tdc::void_t<typename IntRepr<T>::IntP
 
 template<typename T>
 using maybe_bit_packed_pointer_t = typename maybe_bit_packed_pointer_trait_t<T>::pointer_t;
+
+template<typename T>
+using maybe_bit_packed_reference_t = typename maybe_bit_packed_pointer_trait_t<T>::reference_t;
 
 template<typename T>
 inline void call_destructor(maybe_bit_packed_pointer_t<T> ptr) {
