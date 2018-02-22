@@ -22,6 +22,7 @@ struct cbp_repr_t{
 
 template<typename T>
 struct cbp_repr_t<T, std::enable_if_t<!has_IntRepr_v<T>>>{
+    using value_type = T;
     class width_repr_t {
     public:
         constexpr width_repr_t(uint8_t) {}
@@ -61,9 +62,11 @@ struct cbp_repr_t<T, std::enable_if_t<!has_IntRepr_v<T>>>{
 };
 
 template<typename T>
-struct cbp_repr_t<T, std::enable_if_t<has_IntRepr_v<T>>>{
+class cbp_repr_t<T, std::enable_if_t<has_IntRepr_v<T>>>{
     using WidthRepr = typename int_vector::IntRepr<T>::WidthRepr;
+public:
 
+    using value_type = typename int_vector::IntRepr<T>::value_type;
     class width_repr_t: WidthRepr {
     public:
         constexpr width_repr_t(uint8_t size): WidthRepr(size) {}
@@ -75,7 +78,7 @@ struct cbp_repr_t<T, std::enable_if_t<has_IntRepr_v<T>>>{
         }
     };
 
-    static constexpr uint8_t width_from_value(T const& value) {
+    static constexpr uint8_t width_from_value(value_type const& value) {
         return WidthRepr::width_from_value(value);
     }
 
@@ -103,32 +106,34 @@ struct cbp_repr_t<T, std::enable_if_t<has_IntRepr_v<T>>>{
     static inline void construct_val_from_ptr(pointer_t dst, pointer_t src) {
         *dst = *src;
     }
-    static inline void construct_val_from_rval(pointer_t dst, T&& src) {
+    static inline void construct_val_from_rval(pointer_t dst, value_type&& src) {
         *dst = src;
     }
 };
 
 template<typename T>
 class cbp_sized_value_t: cbp_repr_t<T>::width_repr_t {
-    T m_value;
+    using value_type = typename cbp_repr_t<T>::value_type;
+
+    value_type m_value;
 public:
     using width_t = typename cbp_repr_t<T>::width_repr_t;
 
-    inline cbp_sized_value_t(T&& value):
+    inline cbp_sized_value_t(value_type&& value):
         width_t(cbp_repr_t<T>::width_from_value(value)),
         m_value(std::move(value)) {
     }
-    inline cbp_sized_value_t(T&& value, width_t const& width):
+    inline cbp_sized_value_t(value_type&& value, width_t const& width):
         width_t(width),
         m_value(std::move(value)) {
     }
     inline width_t const& width() const {
         return *this;
     }
-    inline T const& value() const {
+    inline value_type const& value() const {
         return m_value;
     }
-    inline T& value() {
+    inline value_type& value() {
         return m_value;
     }
 };
