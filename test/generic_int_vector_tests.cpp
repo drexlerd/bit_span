@@ -105,6 +105,9 @@ void generic_int_vector_ref_template() {
 
     cbp::cbp_repr_t<T>::construct_val_from_ptr(d, c);
     cbp::cbp_repr_t<T>::construct_val_from_rval(d, T(99));
+
+    auto sized_value = cbp::cbp_sized_value_t<T> { T(77), 0 };
+    auto size_value_width = sized_value.width();
 }
 
 TEST(generic_int_vector, int_ref) {

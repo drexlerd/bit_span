@@ -100,16 +100,19 @@ struct cbp_repr_t<T, std::enable_if_t<has_IntRepr_v<T>>>{
     }
 };
 
-/*
 template<typename T>
-class cbp_sized_value_t: cbp_width_t<T> {
+class cbp_sized_value_t: cbp_repr_t<T>::width_repr_t {
     T m_value;
 public:
-    inline cbp_sized_value_t(T&& value, cbp_width_t<T> const& width):
-        cbp_width_t<T>(width),
+    using width_t = typename cbp_repr_t<T>::width_repr_t;
+
+    inline cbp_sized_value_t(T&& value, width_t const& width):
+        width_t(width),
         m_value(std::move(value)) {
     }
+    inline width_t const& width() const {
+        return *this;
+    }
 };
-*/
 
 }}
