@@ -113,6 +113,12 @@ public:
     inline width_t const& width() const {
         return *this;
     }
+    inline T const& value() const {
+        return m_value;
+    }
+    inline T& value() {
+        return m_value;
+    }
 };
 
 }}
