@@ -1,11 +1,8 @@
 #pragma once
 
-#include "maybe_bit_packed.hpp"
-#include <tudocomp/ds/IntVector.hpp>
-#include <tudocomp/util/metaprogramming.hpp>
-#include <tudocomp/ds/IntRepr.hpp>
+#include "conditional_bit_packed.hpp"
 
-namespace tdc {namespace int_vector {
+namespace tdc {namespace cbp {
 
 class bit_layout_element_t {
     uint64_t m_bit_offset = 0;
@@ -24,95 +21,17 @@ public:
     constexpr uint64_t bit_element_size() const { return m_bit_element_size; }
 };
 
-/// TODO: This is temporary and can be removed if the int vector implementations
-/// get more general
-template<typename T, typename X = tdc::void_t<>>
-struct maybe_bit_packed_pointer_trait_t {
-    using pointer_t = T*;
-    using reference_t = T&;
-
-    static constexpr pointer_t construct_relative_to(uint64_t* base_ptr,
-                                                     uint64_t bit_offset,
-                                                     uint64_t bit_element_size) {
-        DCHECK_EQ(bit_offset % 8, 0);
-        DCHECK_EQ(bit_element_size % 8, 0);
-        auto offset = bit_offset / 8;
-        return reinterpret_cast<T*>(reinterpret_cast<char*>(base_ptr) + offset);
-    }
-
-    static inline void call_destructor(pointer_t p) {
-        p->~T();
-    }
-
-    static inline void construct_val_from_ptr(pointer_t dst, pointer_t src) {
-        new(dst) T(std::move(*src));
-    }
-    static inline void construct_val_from_rval(pointer_t dst, T&& src) {
-        new(dst) T(std::move(src));
-    }
-};
-
 template<typename T>
-struct maybe_bit_packed_pointer_trait_t<T, tdc::void_t<typename IntRepr<T>::IntPtrBase>> {
-    using pointer_t = IntPtr<T>;
-    using reference_t = IntRef<T>;
-
-    static constexpr pointer_t construct_relative_to(uint64_t* base_ptr,
-                                                     uint64_t bit_offset,
-                                                     uint64_t bit_element_size) {
-        // Find the uint64_t in which the int pointer starts
-        base_ptr += bit_offset / 64;
-        bit_offset = bit_offset % 64;
-
-        using ptr_base_t = IntPtrBase<pointer_t>;
-
-        auto int_ptr_base = ptr_base_t(base_ptr, bit_offset, bit_element_size);
-        auto int_ptr = pointer_t(int_ptr_base);
-
-        return int_ptr;
-    }
-
-    static inline void call_destructor(pointer_t p) {
-        // NOP (also not implementable as is)
-    }
-    static inline void construct_val_from_ptr(pointer_t dst, pointer_t src) {
-        *dst = *src;
-    }
-    static inline void construct_val_from_rval(pointer_t dst, T&& src) {
-        *dst = src;
-    }
-};
-
-template<typename T>
-using maybe_bit_packed_pointer_t = typename maybe_bit_packed_pointer_trait_t<T>::pointer_t;
-
-template<typename T>
-using maybe_bit_packed_reference_t = typename maybe_bit_packed_pointer_trait_t<T>::reference_t;
-
-template<typename T>
-inline void call_destructor(maybe_bit_packed_pointer_t<T> ptr) {
-    maybe_bit_packed_pointer_trait_t<T>::call_destructor(ptr);
-}
-template<typename T>
-inline void construct_val_from_ptr(maybe_bit_packed_pointer_t<T> dst, maybe_bit_packed_pointer_t<T> src) {
-    maybe_bit_packed_pointer_trait_t<T>::construct_val_from_ptr(dst, src);
-}
-template<typename T>
-inline void construct_val_from_rval(maybe_bit_packed_pointer_t<T> dst, T&& src) {
-    maybe_bit_packed_pointer_trait_t<T>::construct_val_from_rval(dst, std::move(src));
-}
-
-template<typename T>
-class maybe_bit_packed_layout_element_t: public bit_layout_element_t {
+class cbp_layout_element_t: public bit_layout_element_t {
 public:
-    using pointer_t = maybe_bit_packed_pointer_t<T>;
+    using pointer_t = cbp_pointer_t<T>;
 
     constexpr pointer_t ptr_relative_to(uint64_t* base_ptr) const {
-        return maybe_bit_packed_pointer_trait_t<T>::construct_relative_to(base_ptr, bit_offset(), bit_element_size());
+        return cbp_pointer_trait_t<T>::construct_relative_to(base_ptr, bit_offset(), bit_element_size());
     }
 
     using bit_layout_element_t::bit_layout_element_t;
-    constexpr maybe_bit_packed_layout_element_t(bit_layout_element_t&& base):
+    constexpr cbp_layout_element_t(bit_layout_element_t&& base):
         bit_layout_element_t(std::move(base)) {}
 };
 
@@ -149,12 +68,12 @@ public:
     }
 
     template<typename T>
-    constexpr maybe_bit_packed_layout_element_t<T> aligned_elements(size_t n) {
+    constexpr cbp_layout_element_t<T> aligned_elements(size_t n) {
         return aligned_elements(alignof(T), sizeof(T), n);
     }
 
     template<typename T>
-    constexpr maybe_bit_packed_layout_element_t<T> maybe_bit_packed_elements(size_t n, maybe_bit_packed_width_t<T> const& meta) {
+    constexpr cbp_layout_element_t<T> cbp_elements(size_t n, cbp_width_t<T> const& meta) {
         if(meta.needs_alignment()) {
             return aligned_elements<T>(n);
         } else {
