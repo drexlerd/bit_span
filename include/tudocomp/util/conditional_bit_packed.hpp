@@ -33,6 +33,10 @@ struct cbp_repr_t<T, std::enable_if_t<!has_IntRepr_v<T>>>{
         }
     };
 
+    static constexpr uint8_t width_from_value(T const& value) {
+        return 0;
+    }
+
     using pointer_t = T*;
     using reference_t = T&;
 
@@ -64,12 +68,16 @@ struct cbp_repr_t<T, std::enable_if_t<has_IntRepr_v<T>>>{
     public:
         constexpr width_repr_t(uint8_t size): WidthRepr(size) {}
         constexpr uint8_t get_width() const {
-            return this->data_bit_size();;
+            return this->data_bit_size();
         }
         constexpr bool needs_alignment() const {
             return false;
         }
     };
+
+    static constexpr uint8_t width_from_value(T const& value) {
+        return WidthRepr::width_from_value(value);
+    }
 
     using pointer_t = int_vector::IntPtr<T>;
     using reference_t = int_vector::IntRef<T>;
@@ -106,6 +114,10 @@ class cbp_sized_value_t: cbp_repr_t<T>::width_repr_t {
 public:
     using width_t = typename cbp_repr_t<T>::width_repr_t;
 
+    inline cbp_sized_value_t(T&& value):
+        width_t(cbp_repr_t<T>::width_from_value(value)),
+        m_value(std::move(value)) {
+    }
     inline cbp_sized_value_t(T&& value, width_t const& width):
         width_t(width),
         m_value(std::move(value)) {

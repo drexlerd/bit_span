@@ -71,6 +71,10 @@ namespace tdc {namespace int_vector {
         constexpr FixedWidthRepr(uint8_t) {}
         constexpr uint8_t data_bit_size() const { return N; }
         constexpr void set_data_bit_size(uint8_t) { }
+
+        static constexpr uint8_t width_from_value(uint64_t value) {
+            return 0;
+        }
     };
 
     class DynamicWidthRepr {
@@ -79,6 +83,10 @@ namespace tdc {namespace int_vector {
         constexpr DynamicWidthRepr(uint8_t bit_size): m_bit_size(bit_size) {}
         constexpr uint8_t data_bit_size() const { return m_bit_size; }
         constexpr void set_data_bit_size(uint8_t bit_size) { m_bit_size = bit_size; }
+
+        static constexpr uint8_t width_from_value(uint64_t value) {
+            return bits_for(value);
+        }
     };
 
     template<typename const_qual_val_t, size_t N>
