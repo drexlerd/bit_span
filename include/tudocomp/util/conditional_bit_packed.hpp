@@ -5,11 +5,23 @@
 #include <tudocomp/util/metaprogramming.hpp>
 #include <tudocomp/ds/IntVector.hpp>
 #include <tudocomp/ds/IntRepr.hpp>
+#include <type_traits>
 
 namespace tdc {namespace cbp {
 
+template< typename, typename = tdc::void_t<> >
+struct has_IntRepr_t : std::false_type { };
+template< typename T >
+struct has_IntRepr_t<T, tdc::void_t<typename int_vector::IntRepr<T>::IntPtrBase>> : std::true_type { };
+template< typename T >
+constexpr bool has_IntRepr_v = has_IntRepr_t<T>::value;
+
+template<typename T, typename = tdc::void_t<>>
+struct cbp_width_trait_t{
+};
+
 template<typename T>
-struct cbp_width_trait{
+struct cbp_width_trait_t<T, std::enable_if_t<!has_IntRepr_v<T>>>{
     class type {
     public:
         constexpr type(uint8_t) {}
@@ -22,28 +34,15 @@ struct cbp_width_trait{
     };
 };
 
-template<size_t N>
-struct cbp_width_trait<uint_impl_t<N>>{
-    class type {
-    public:
-        constexpr type(uint8_t) {}
-        constexpr uint8_t get_width() const {
-            return N;
-        }
-        constexpr bool needs_alignment() const {
-            return false;
-        }
-    };
-};
+template<typename T>
+struct cbp_width_trait_t<T, std::enable_if_t<has_IntRepr_v<T>>>{
+    using WidthRepr = typename int_vector::IntRepr<T>::WidthRepr;
 
-template<>
-struct cbp_width_trait<dynamic_t>{
-    class type {
-        uint8_t m_width;
+    class type: WidthRepr {
     public:
-        constexpr type(uint8_t w): m_width(w) {}
+        constexpr type(uint8_t size): WidthRepr(size) {}
         constexpr uint8_t get_width() const {
-            return m_width;
+            return this->data_bit_size();;
         }
         constexpr bool needs_alignment() const {
             return false;
@@ -53,6 +52,10 @@ struct cbp_width_trait<dynamic_t>{
 
 template<typename T, typename X = tdc::void_t<>>
 struct cbp_pointer_trait_t {
+};
+
+template<typename T>
+struct cbp_pointer_trait_t<T, std::enable_if_t<!has_IntRepr_v<T>>> {
     using pointer_t = T*;
     using reference_t = T&;
 
@@ -78,7 +81,7 @@ struct cbp_pointer_trait_t {
 };
 
 template<typename T>
-struct cbp_pointer_trait_t<T, tdc::void_t<typename int_vector::IntRepr<T>::IntPtrBase>> {
+struct cbp_pointer_trait_t<T, std::enable_if_t<has_IntRepr_v<T>>> {
     using pointer_t = int_vector::IntPtr<T>;
     using reference_t = int_vector::IntRef<T>;
 
@@ -109,7 +112,7 @@ struct cbp_pointer_trait_t<T, tdc::void_t<typename int_vector::IntRepr<T>::IntPt
 };
 
 template<typename T>
-using cbp_width_t = typename cbp_width_trait<T>::type;
+using cbp_width_t = typename cbp_width_trait_t<T>::type;
 
 template<typename T>
 using cbp_pointer_t = typename cbp_pointer_trait_t<T>::pointer_t;
@@ -129,5 +132,17 @@ template<typename T>
 inline void construct_val_from_rval(cbp_pointer_t<T> dst, T&& src) {
     cbp_pointer_trait_t<T>::construct_val_from_rval(dst, std::move(src));
 }
+
+/*
+template<typename T>
+class cbp_sized_value_t: cbp_width_t<T> {
+    T m_value;
+public:
+    inline cbp_sized_value_t(T&& value, cbp_width_t<T> const& width):
+        cbp_width_t<T>(width),
+        m_value(std::move(value)) {
+    }
+};
+*/
 
 }}

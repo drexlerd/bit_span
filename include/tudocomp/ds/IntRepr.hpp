@@ -23,6 +23,7 @@ namespace tdc {namespace int_vector {
             return sdsl_bits::read_int(word, offset, len);
         }
     };
+
     struct BitWidthMemRw {
         inline static void write_int(uint64_t* word, uint64_t v, uint8_t o, const uint8_t) {
             auto& p = *word;
@@ -39,6 +40,7 @@ namespace tdc {namespace int_vector {
             return (p & mask) != 0;
         }
     };
+
     template<class MB, class MemRw>
     struct RefDispatch {
         typedef MB SelfMaxBit;
@@ -62,35 +64,46 @@ namespace tdc {namespace int_vector {
             );
         }
     };
-    template<typename const_qual_ptr_t, size_t N>
-    class IntPtrFixedWidthRepr {
+
+    template<size_t N>
+    class FixedWidthRepr {
     public:
-        const_qual_ptr_t m_ptr;
+        constexpr FixedWidthRepr(uint8_t) {}
+        constexpr uint8_t data_bit_size() const { return N; }
+        constexpr void set_data_bit_size(uint8_t) { }
+    };
+
+    class DynamicWidthRepr {
+        uint8_t m_bit_size;
+    public:
+        constexpr DynamicWidthRepr(uint8_t bit_size): m_bit_size(bit_size) {}
+        constexpr uint8_t data_bit_size() const { return m_bit_size; }
+        constexpr void set_data_bit_size(uint8_t bit_size) { m_bit_size = bit_size; }
+    };
+
+    template<typename const_qual_val_t, size_t N>
+    class IntPtrFixedWidthRepr: public FixedWidthRepr<N> {
+    public:
+        const_qual_val_t* m_ptr;
         uint8_t m_bit_offset;
-    private:
-        //const uint8_t m_bit_size;
     public:
-        IntPtrFixedWidthRepr(const_qual_ptr_t ptr, uint8_t offset, uint8_t /*size*/):
-            m_ptr(ptr), m_bit_offset(offset) /*, m_bit_size(size)*/ {}
-        inline uint8_t data_bit_size() const { return N; }
-        inline void set_data_bit_size(uint8_t x) { }
-        inline IntPtrFixedWidthRepr data_offset_to(const_qual_ptr_t ptr, uint8_t offset) const {
+        IntPtrFixedWidthRepr(const_qual_val_t* ptr, uint8_t offset, uint8_t size):
+            m_ptr(ptr), m_bit_offset(offset), FixedWidthRepr<N>(size) {}
+        inline IntPtrFixedWidthRepr data_offset_to(const_qual_val_t* ptr, uint8_t offset) const {
             return IntPtrFixedWidthRepr(ptr, offset, this->data_bit_size());
         }
     };
-    template<typename const_qual_ptr_t>
-    class IntPtrDynamicWidthRepr {
+    template<typename const_qual_val_t>
+    class IntPtrDynamicWidthRepr: public DynamicWidthRepr {
     public:
-        const_qual_ptr_t m_ptr;
+        const_qual_val_t* m_ptr;
         uint8_t m_bit_offset;
-    private:
-        uint8_t m_bit_size;
+
+        using WidthRepr = DynamicWidthRepr;
     public:
-        IntPtrDynamicWidthRepr(const_qual_ptr_t ptr, uint8_t offset, uint8_t size):
-            m_ptr(ptr), m_bit_offset(offset), m_bit_size(size) {}
-        inline uint8_t data_bit_size() const { return m_bit_size; }
-        inline void set_data_bit_size(uint8_t x) { m_bit_size = x; }
-        inline IntPtrDynamicWidthRepr data_offset_to(const_qual_ptr_t ptr, uint8_t offset) const {
+        IntPtrDynamicWidthRepr(const_qual_val_t* ptr, uint8_t offset, uint8_t size):
+            m_ptr(ptr), m_bit_offset(offset), DynamicWidthRepr(size) {}
+        inline IntPtrDynamicWidthRepr data_offset_to(const_qual_val_t* ptr, uint8_t offset) const {
             return IntPtrDynamicWidthRepr(ptr, offset, this->data_bit_size());
         }
     };
@@ -138,8 +151,10 @@ namespace tdc {namespace int_vector {
         using mem_rw = DynamicWidthMemRw;
         using IntOpDispatch = RefDispatch<uint32_t, mem_rw>;
 
-        using ConstIntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType const*, N>;
-        using IntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType*, N>;
+        using WidthRepr = FixedWidthRepr<N>;
+
+        using ConstIntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType const, N>;
+        using IntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType, N>;
 
         using BitPackingVectorRepr = FixedBitPackingVectorRepr<N>;
     };
@@ -150,8 +165,10 @@ namespace tdc {namespace int_vector {
         using mem_rw = DynamicWidthMemRw;
         using IntOpDispatch = RefDispatch<uint64_t, mem_rw>;
 
-        using ConstIntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType const*, N>;
-        using IntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType*, N>;
+        using WidthRepr = FixedWidthRepr<N>;
+
+        using ConstIntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType const, N>;
+        using IntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType, N>;
 
         using BitPackingVectorRepr = FixedBitPackingVectorRepr<N>;
     };
@@ -162,8 +179,10 @@ namespace tdc {namespace int_vector {
         using mem_rw = BitWidthMemRw;
         using IntOpDispatch = RefDispatch<uint32_t, mem_rw>;
 
-        using ConstIntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType const*, 1>;
-        using IntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType*, 1>;
+        using WidthRepr = FixedWidthRepr<1>;
+
+        using ConstIntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType const, 1>;
+        using IntPtrBase = IntPtrFixedWidthRepr<DynamicIntValueType, 1>;
 
         using BitPackingVectorRepr = FixedBitPackingVectorRepr<1>;
     };
@@ -174,8 +193,10 @@ namespace tdc {namespace int_vector {
         using mem_rw = DynamicWidthMemRw;
         using IntOpDispatch = RefDispatch<uint64_t, mem_rw>;
 
-        using ConstIntPtrBase = IntPtrDynamicWidthRepr<DynamicIntValueType const*>;
-        using IntPtrBase = IntPtrDynamicWidthRepr<DynamicIntValueType*>;
+        using WidthRepr = DynamicWidthRepr;
+
+        using ConstIntPtrBase = IntPtrDynamicWidthRepr<DynamicIntValueType const>;
+        using IntPtrBase = IntPtrDynamicWidthRepr<DynamicIntValueType>;
 
         using BitPackingVectorRepr = DynamicBitPackingVectorRepr;
     };
