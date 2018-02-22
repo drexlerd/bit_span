@@ -24,10 +24,10 @@ public:
 template<typename T>
 class cbp_layout_element_t: public bit_layout_element_t {
 public:
-    using pointer_t = cbp_pointer_t<T>;
+    using pointer_t = typename cbp_repr_t<T>::pointer_t;
 
     constexpr pointer_t ptr_relative_to(uint64_t* base_ptr) const {
-        return cbp_pointer_trait_t<T>::construct_relative_to(base_ptr, bit_offset(), bit_element_size());
+        return cbp_repr_t<T>::construct_relative_to(base_ptr, bit_offset(), bit_element_size());
     }
 
     using bit_layout_element_t::bit_layout_element_t;
@@ -73,7 +73,10 @@ public:
     }
 
     template<typename T>
-    constexpr cbp_layout_element_t<T> cbp_elements(size_t n, cbp_width_t<T> const& meta) {
+    using width_t = typename cbp_repr_t<T>::width_repr_t;
+
+    template<typename T>
+    constexpr cbp_layout_element_t<T> cbp_elements(size_t n, width_t<T> const& meta) {
         if(meta.needs_alignment()) {
             return aligned_elements<T>(n);
         } else {

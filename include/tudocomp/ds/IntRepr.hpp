@@ -88,7 +88,7 @@ namespace tdc {namespace int_vector {
         uint8_t m_bit_offset;
     public:
         IntPtrFixedWidthRepr(const_qual_val_t* ptr, uint8_t offset, uint8_t size):
-            m_ptr(ptr), m_bit_offset(offset), FixedWidthRepr<N>(size) {}
+             FixedWidthRepr<N>(size), m_ptr(ptr), m_bit_offset(offset) {}
         inline IntPtrFixedWidthRepr data_offset_to(const_qual_val_t* ptr, uint8_t offset) const {
             return IntPtrFixedWidthRepr(ptr, offset, this->data_bit_size());
         }
@@ -102,7 +102,7 @@ namespace tdc {namespace int_vector {
         using WidthRepr = DynamicWidthRepr;
     public:
         IntPtrDynamicWidthRepr(const_qual_val_t* ptr, uint8_t offset, uint8_t size):
-            m_ptr(ptr), m_bit_offset(offset), DynamicWidthRepr(size) {}
+            DynamicWidthRepr(size), m_ptr(ptr), m_bit_offset(offset) {}
         inline IntPtrDynamicWidthRepr data_offset_to(const_qual_val_t* ptr, uint8_t offset) const {
             return IntPtrDynamicWidthRepr(ptr, offset, this->data_bit_size());
         }

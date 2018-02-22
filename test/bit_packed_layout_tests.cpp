@@ -108,10 +108,10 @@ TEST(bit_layout, test4) {
 
     auto bv = layout.aligned_elements<uint64_t>(1);
 
-    auto values_width = cbp_width_t<uint_t<15>>(0);
+    auto values_width = typename cbp_repr_t<uint_t<15>>::width_repr_t(0);
     auto values = layout.cbp_elements<uint_t<15>>(3, values_width);
 
-    auto quot_width = cbp_width_t<dynamic_t>(15);
+    auto quot_width = typename cbp_repr_t<dynamic_t>::width_repr_t(15);
     auto quot_bv = layout.cbp_elements<dynamic_t>(3, quot_width);
 
     // [        |        |        ]
@@ -149,10 +149,10 @@ TEST(bit_layout, test5) {
 
     auto bv = layout.aligned_elements<uint64_t>(1);
 
-    auto values_width = cbp_width_t<uint_t<15>>(0);
+    auto values_width = typename cbp_repr_t<uint_t<15>>::width_repr_t(0);
     auto values = layout.cbp_elements<uint_t<15>>(3, values_width);
 
-    auto quot_width = cbp_width_t<dynamic_t>(30);
+    auto quot_width = typename cbp_repr_t<dynamic_t>::width_repr_t(30);
     auto quot_bv = layout.cbp_elements<dynamic_t>(3, quot_width);
 
     // [        |        |        |        ]
@@ -192,7 +192,7 @@ TEST(bit_layout, test6) {
 
     auto values = layout.aligned_elements<uint32_t>(3);
     layout.aligned_elements<uint64_t>(0);
-    auto quot_width = cbp_width_t<dynamic_t>(30);
+    auto quot_width = typename cbp_repr_t<dynamic_t>::width_repr_t(30);
     auto quot_bv = layout.cbp_elements<dynamic_t>(3, quot_width);
 
     // [        |        |        |        |        ]
@@ -230,7 +230,7 @@ TEST(bit_layout, test7) {
     auto bv = layout.aligned_elements<uint64_t>(1);
 
     auto values = layout.aligned_elements<uint32_t>(3);
-    auto quot_width = cbp_width_t<dynamic_t>(30);
+    auto quot_width = typename cbp_repr_t<dynamic_t>::width_repr_t(30);
     auto quot_bv = layout.cbp_elements<dynamic_t>(3, quot_width);
 
 

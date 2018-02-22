@@ -98,13 +98,13 @@ void generic_int_vector_ref_template() {
     w = z;
     ASSERT_EQ(w, 0xDEADBEEFu);
 
-    cbp::call_destructor<T>(a);
-    cbp::call_destructor<T>(b);
-    cbp::call_destructor<T>(c);
-    cbp::call_destructor<T>(d);
+    cbp::cbp_repr_t<T>::call_destructor(a);
+    cbp::cbp_repr_t<T>::call_destructor(b);
+    cbp::cbp_repr_t<T>::call_destructor(c);
+    cbp::cbp_repr_t<T>::call_destructor(d);
 
-    cbp::construct_val_from_ptr<T>(d, c);
-    cbp::construct_val_from_rval<T>(d, T(99));
+    cbp::cbp_repr_t<T>::construct_val_from_ptr(d, c);
+    cbp::cbp_repr_t<T>::construct_val_from_rval(d, T(99));
 }
 
 TEST(generic_int_vector, int_ref) {
