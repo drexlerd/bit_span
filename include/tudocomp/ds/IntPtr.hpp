@@ -168,7 +168,6 @@ namespace int_vector {
         }
 
         friend bool operator==(const Self& lhs, const Self& rhs) {
-            DCHECK(lhs.data_bit_size() == rhs.data_bit_size());
             return (lhs.m_ptr == rhs.m_ptr)
                 && (lhs.m_bit_offset == rhs.m_bit_offset);
         }
