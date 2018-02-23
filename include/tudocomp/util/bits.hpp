@@ -32,7 +32,8 @@ namespace tdc {
         return n == 0 ? 1U : bits_hi(n);
     }
 
-    namespace detail {
+    /// \cond INTERNAL
+    namespace portable_arithmetic_shift {
         // Based on source: https://palotasb.wordpress.com/2016/12/29/fast-portable-c-cpp-arithmetic-shifting-power-of-two/
 
         template <typename T>
@@ -101,7 +102,7 @@ namespace tdc {
     template <typename T >
     constexpr T shift_by(T value, int amount) noexcept
     {
-        using namespace detail;
+        using namespace portable_arithmetic_shift;
         return uses_arithmetic_shift<T>
             ? shift_by_arithmetic(value, amount)
             : shift_by_portable(value, amount);
@@ -114,7 +115,7 @@ namespace tdc {
     template <typename T >
     constexpr T shift_right_by(T value, unsigned int amount) noexcept
     {
-        using namespace detail;
+        using namespace portable_arithmetic_shift;
         return uses_arithmetic_shift<T>
             ? shift_right_by_arithmetic(value, amount)
             : shift_right_by_portable(value, amount);
@@ -127,7 +128,7 @@ namespace tdc {
     template <typename T >
     constexpr T shift_left_by(T value, unsigned int amount) noexcept
     {
-        using namespace detail;
+        using namespace portable_arithmetic_shift;
         return uses_arithmetic_shift<T>
             ? shift_left_by_arithmetic(value, amount)
             : shift_left_by_portable(value, amount);
