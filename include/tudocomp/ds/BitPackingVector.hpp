@@ -502,11 +502,11 @@ namespace int_vector {
 
                 // move elements into new width grid
                 for (uint64_t i = 0; i < common_size; i++) {
-                    sdsl_bits::move_left((const uint64_t*&) old_ptr, old_p.offset, old_width);
-                    auto v = sdsl_bits::read_int(           old_ptr, old_p.offset, old_width);
+                    fast_move_left((const uint64_t*&) old_ptr, old_p.offset, old_width);
+                    auto v = sdsl_bits::read_int(     old_ptr, old_p.offset, old_width);
 
-                    sdsl_bits::move_left((const uint64_t*&) new_ptr,    new_p.offset, new_width);
-                    sdsl_bits::write_int(                   new_ptr, v, new_p.offset, new_width);
+                    fast_move_left((const uint64_t*&) new_ptr,    new_p.offset, new_width);
+                    sdsl_bits::write_int(             new_ptr, v, new_p.offset, new_width);
                 }
             } else if (old_width > new_width) {
                 // shrink

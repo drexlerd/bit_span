@@ -127,14 +127,14 @@ namespace int_vector {
 
         Self& operator++() {
             DynamicIntValueType const* tmp = this->m_ptr;
-            sdsl_bits::move_right(tmp, this->m_bit_offset, this->data_bit_size());
+            fast_move_right(tmp, this->m_bit_offset, this->data_bit_size());
             this->m_ptr = (DynamicIntValueType*) tmp;
             return static_cast<Self&>(*this);
         }
 
         Self& operator--() {
             DynamicIntValueType const* tmp = this->m_ptr;
-            sdsl_bits::move_left(tmp, this->m_bit_offset, this->data_bit_size());
+            fast_move_left(tmp, this->m_bit_offset, this->data_bit_size());
             this->m_ptr = (DynamicIntValueType*) tmp;
             return static_cast<Self&>(*this);
         }

@@ -30,4 +30,18 @@ namespace tdc {
     inline constexpr uint_fast8_t bits_for(size_t n) {
         return n == 0 ? 1U : bits_hi(n);
     }
+
+    inline void fast_move_right(const uint64_t*& word, uint8_t& offset, const uint8_t len)
+    {
+        offset += len;
+        word += (offset / 64); // advance pointer if offset got greater than 63
+        offset &= 0x3F;        // bound offset to mod 64
+    }
+
+    inline void fast_move_left(const uint64_t*& word, uint8_t& offset, const uint8_t len)
+    {
+        offset -= len;
+        word -= (int8_t(offset) < 0); // advance pointer if offset got less than 0
+        offset &= 0x3F;               // bound offset to mod 64
+    }
 }
