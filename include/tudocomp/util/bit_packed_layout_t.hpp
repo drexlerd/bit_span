@@ -31,6 +31,7 @@ public:
     }
 
     using bit_layout_element_t::bit_layout_element_t;
+    constexpr cbp_layout_element_t() {}
     constexpr cbp_layout_element_t(bit_layout_element_t&& base):
         bit_layout_element_t(std::move(base)) {}
 };
