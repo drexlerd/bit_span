@@ -375,6 +375,26 @@ namespace int_vector {
     static_assert(sizeof(GenericIntPtr<ConstIntPtr<uint_t<40>>, uint_t<40>>) <= (sizeof(void*) * 2),
                   "make sure this is reasonably small");
 
+    template<typename T>
+    inline std::ostream& operator<<(std::ostream& out, ConstIntPtr<T> ptr) {
+        return out << "{" << ptr.internal_ptr() << ", " << ptr.internal_bit_offset() << "}";
+    }
+
+    template<typename T>
+    inline std::ostream& operator<<(std::ostream& out, IntPtr<T> ptr) {
+        return out << "{" << ptr.internal_ptr() << ", " << ptr.internal_bit_offset() << "}";
+    }
+
+    template<typename T>
+    inline std::ostream& operator<<(std::ostream& out, ConstIntRef<T> ref) {
+        return out << typename ConstIntRef<T>::value_type(ref);
+    }
+
+    template<typename T>
+    inline std::ostream& operator<<(std::ostream& out, IntRef<T> ref) {
+        return out << typename ConstIntRef<T>::value_type(ref);
+    }
+
 }
 
 template<class T>

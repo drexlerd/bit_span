@@ -107,11 +107,15 @@ void generic_int_vector_ref_template() {
     cbp::cbp_repr_t<T>::construct_val_from_rval(d, T(99));
 
     auto sized_value = cbp::cbp_sized_value_t<T> { T(77), 0 };
-    auto size_value_width = sized_value.width();
+    sized_value.width();
 
-    auto other_width1 = cbp::cbp_repr_t<T>::width_from_value(0);
-    auto other_width2 = cbp::cbp_repr_t<T>::width_from_value(123);
-    auto other_width3 = cbp::cbp_repr_t<T>::width_from_value(0xffff);
+    cbp::cbp_repr_t<T>::width_from_value(0);
+    cbp::cbp_repr_t<T>::width_from_value(123);
+    cbp::cbp_repr_t<T>::width_from_value(0xffff);
+
+    std::stringstream ss;
+    ss << a << b << c << d;
+    ss << w << x << y << z;
 }
 
 TEST(generic_int_vector, int_ref) {
