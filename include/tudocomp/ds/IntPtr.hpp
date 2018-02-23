@@ -140,17 +140,11 @@ namespace int_vector {
         }
 
         friend Self operator+(const Self& lhs, const ptrdiff_t& rhs) {
-            auto tmp = lhs;
-            if (rhs >= 0) {
-                for(size_t i = 0; i < size_t(rhs); i++) {
-                    ++tmp;
-                }
-            } else {
-                for(size_t i = 0; i < size_t(-rhs); i++) {
-                    --tmp;
-                }
-            }
-            return tmp;
+            auto r = lhs;
+            DynamicIntValueType const* tmp = r.m_ptr;
+            fast_move_far(tmp, r.m_bit_offset, int64_t(uint64_t(r.data_bit_size())) * rhs);
+            r.m_ptr = (DynamicIntValueType*) tmp;
+            return r;
         }
 
         friend Self operator+(const ptrdiff_t& lhs, const Self& rhs) { return rhs + lhs;      }
