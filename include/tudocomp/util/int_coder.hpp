@@ -3,6 +3,8 @@
 #include <climits>
 #include <unistd.h>
 
+#include <glog/logging.h>
+
 namespace tdc {
 
 /*
@@ -120,6 +122,7 @@ inline T read_ternary(ReadBitSink&& sink) {
     return v;
 }
 
+// Implementierung gemäß https://en.wikipedia.org/wiki/Elias_gamma_coding
 template<typename T, typename WriteBitSink>
 inline void write_elias_gamma(WriteBitSink&& sink, T v) {
     DCHECK_GT(v, 0) << "zero cannot be gamma-encoded";
@@ -129,6 +132,7 @@ inline void write_elias_gamma(WriteBitSink&& sink, T v) {
     if(m > 0) sink.write_int(v, m); // cut off leading 1
 }
 
+// Implementierung gemäß https://en.wikipedia.org/wiki/Elias_gamma_coding
 template<typename T, typename ReadBitSink>
 inline T read_elias_gamma(ReadBitSink&& sink) {
     auto m = read_unary<size_t>(sink);
