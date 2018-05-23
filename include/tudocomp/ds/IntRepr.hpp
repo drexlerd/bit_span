@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <vector>
 
 #include <tudocomp/util/bits.hpp>
 #include <tudocomp/ds/uint_t.hpp>
