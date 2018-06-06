@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 project (bit_span)
 
 # Check if this project is build standalone
+#
+# We do this in case we want to use this repo as a GIT submodule,
+# because then we only need the source files themselves
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     # I am top-level project.
 
@@ -66,6 +69,10 @@ add_library(bit_span INTERFACE)
 target_link_libraries(bit_span INTERFACE glog)
 target_include_directories(bit_span INTERFACE include)
 
+# Check if this project is build standalone
+#
+# We do this in case we want to use this repo as a GIT submodule,
+# because then we only need the source files themselves
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     # Unit tests for everything in src
     add_subdirectory(test)
