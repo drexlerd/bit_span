@@ -78,11 +78,12 @@ class uint_impl_t: public IntegerBase<uint_impl_t<bits>> {
 
 public:
     constexpr uint_impl_t(): m_data(0) {}
-    constexpr uint_impl_t(uint_impl_t&& i): m_data(i.m_data) {}
+    constexpr uint_impl_t(uint_impl_t&&) = default;
+    inline uint_impl_t& operator=(uint_impl_t&&) = default;
 
     // copying
-    constexpr uint_impl_t(const uint_impl_t& i): m_data(i.m_data) {}
-    inline uint_impl_t& operator=(const uint_impl_t& b) { m_data = b.m_data; return *this; }
+    constexpr uint_impl_t(const uint_impl_t& i) = default;
+    inline uint_impl_t& operator=(const uint_impl_t&) = default;
 
     // conversions for all fundamental char types
     constexpr uint_impl_t(unsigned char i): m_data(i) {}
