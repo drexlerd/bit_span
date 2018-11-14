@@ -78,12 +78,11 @@ class uint_impl_t: public IntegerBase<uint_impl_t<bits>> {
 
 public:
     constexpr uint_impl_t(): m_data(0) {}
-    constexpr uint_impl_t(uint_impl_t&&) = default;
-    inline uint_impl_t& operator=(uint_impl_t&&) = default;
+    constexpr uint_impl_t(uint_impl_t&& i): m_data(i.m_data) {}
 
     // copying
-    constexpr uint_impl_t(const uint_impl_t& i) = default;
-    inline uint_impl_t& operator=(const uint_impl_t&) = default;
+    constexpr uint_impl_t(const uint_impl_t& i): m_data(i.m_data) {}
+    inline uint_impl_t& operator=(const uint_impl_t& b) { m_data = b.m_data; return *this; }
 
     // conversions for all fundamental char types
     constexpr uint_impl_t(unsigned char i): m_data(i) {}
@@ -215,7 +214,14 @@ namespace std {
         static constexpr bool is_modulo = false;
 
         static constexpr int digits = N;
-        static constexpr int digits10 = std::numeric_limits<T>::digits * std::log10(2);
+
+#if defined(__GNUC__) && !defined(__clang__)
+        static constexpr double log10base2 = std::log10(2);
+#else
+        static constexpr double log10base2 = 0.30102999566398119521;
+#endif
+
+        static constexpr int digits10 = std::numeric_limits<T>::digits * log10base2;
         static constexpr int max_digits10 = 0;
         static constexpr int radix = 2;
         static constexpr int min_exponent = 0;
