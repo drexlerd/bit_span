@@ -41,14 +41,23 @@ struct cbp_repr_t<T, std::enable_if_t<!has_IntRepr_v<T>>>{
     using pointer_t = T*;
     using reference_t = T&;
 
-    static constexpr pointer_t construct_relative_to(uint64_t* base_ptr,
+#ifdef NDEBUG
+#define CONSTEXPRONNDEBUG constexpr
+#else
+#define CONSTEXPRONNDEBUG
+#endif
+
+    static CONSTEXPRONNDEBUG pointer_t construct_relative_to(uint64_t* base_ptr,
                                                      uint64_t bit_offset,
                                                      uint64_t bit_element_size) {
+#ifndef NDEBUG
         DCHECK_EQ(bit_offset % 8, 0);
         DCHECK_EQ(bit_element_size % 8, 0);
+#endif
         auto offset = bit_offset / 8;
         return reinterpret_cast<T*>(reinterpret_cast<char*>(base_ptr) + offset);
     }
+#undef CONSTEXPRONNDEBUG
 
     static inline void call_destructor(pointer_t p) {
         p->~T();
