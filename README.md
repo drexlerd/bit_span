@@ -1,27 +1,20 @@
-compacts sparse hashtable
+Bit-Span
 ========
 
-# Standalone usage
+Bit-Span is a bit-compact integer vector, meaning that it can store
+integers with a fixed bit-width `n`, where `n` can range from `1` to `64`
+(which is in contrast to standard C/C++ arrays allowing only integers with a bit-width of 8 - char, 16 - short, 32 - int, 64 - long long, etc.).
 
-TODO: Running tests
+The main class of this library is called `tdc::int_vector::IntVector<T>`, where T is either a plain C/C++ integer type (char,short,int,long,long long, etc.), or `uint_t<n>` representing numbers with bit-width `n`, where `n` can range from `1` to `64`.
+The interface of this class tries to ressemble the interface of `std::vector<T>`.
 
-# Using as external dependency
+Further information can be found in the [tudocomp documentation](http://tudocomp.org/documentation/index.html#arbitrary-width-integer-vectors)
 
-TODO: usecase of copying, or using as submodule
 
 # Dependencies
 
-The CMake build process will either find external dependencies on the
-system if they have been properly installed, or automatically download and build
-them from their official repositories in case they cannot be found. In that
-regard, a proper installation of the dependencies is not required.
-
-Said external dependencies are the following:
-
-* [Google Logging (glog)](https://github.com/google/glog) (0.34 or later).
-* [Google Test](https://github.com/google/googletest) (1.7.0 or later) __[Just for running the unit tests]__.
+Same as [compact sparse hash](https://github.com/tudocomp/compact_sparse_hash)
 
 # License
 
-The code in this repository is published under the
-[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+Same as [compact sparse hash](https://github.com/tudocomp/compact_sparse_hash)
