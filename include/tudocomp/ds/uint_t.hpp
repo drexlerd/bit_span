@@ -235,7 +235,7 @@ namespace std {
 
         static constexpr T min() { return 0; }
         static constexpr T lowest() { return 0; }
-        static constexpr T max() { return uint64_t(std::pow(2, N) - 1); }
+        static constexpr T max() { return uint64_t((1ULL << N) - 1); }
         static constexpr T epsilon() { return 0; }
         static constexpr T round_error() { return 0; }
         static constexpr T infinity() { return 0; }
