@@ -235,7 +235,12 @@ namespace std {
 
         static constexpr T min() { return 0; }
         static constexpr T lowest() { return 0; }
-        static constexpr T max() { return uint64_t(std::pow(2, N) - 1); }
+        static constexpr T max() { 
+            return // compute the bitmask 1...1 with N ones. This formulua works even when N=64
+                ( // leftshift for the leftmost 1, fill the other ones with a bitwise or
+                 (1ULL<<(N-1ULL)) | ((1ULL<<(N-1ULL))-1ULL)
+                );
+        }
         static constexpr T epsilon() { return 0; }
         static constexpr T round_error() { return 0; }
         static constexpr T infinity() { return 0; }
