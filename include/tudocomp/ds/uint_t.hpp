@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <cmath>
+#include <sstream>
 
 namespace tdc {
 
@@ -251,7 +252,9 @@ namespace std {
 
     template<size_t N>
     std::string to_string(tdc::uint_impl_t<N> value) {
-        return std::to_string(uint64_t(value));
+        std::ostringstream oss;
+        oss << value;
+        return oss.str();
     }
 
     template<size_t N>
