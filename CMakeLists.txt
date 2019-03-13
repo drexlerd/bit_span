@@ -10,12 +10,11 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
 endif()
 
 if(STANDALONE)
-    # I am top-level project.
-    set(CMAKE_MODULE_PATH
-        ${CMAKE_MODULE_PATH}
-        "${CMAKE_SOURCE_DIR}/submodules/build_system/cmakemodules")
-
     # init build system
+    execute_process(COMMAND git submodule update --init -- build_system
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/submodules)
+
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/submodules/build_system/cmakemodules")
     include(tdc_init)
 
     # downloadable dependencies
