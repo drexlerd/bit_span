@@ -48,7 +48,7 @@ inline T read_int(ReadBitSink&& sink, size_t amount = sizeof(T) * CHAR_BIT) {
 
 template<typename T, typename WriteBitSink>
 inline void write_compressed_int(WriteBitSink&& sink, T v, size_t b = 7) {
-    DCHECK(b > 0);
+    DCHECK_GT(b, 0U);
 
     uint64_t u = uint64_t(v);
     uint64_t mask = (u << b) - 1;
@@ -63,7 +63,7 @@ inline void write_compressed_int(WriteBitSink&& sink, T v, size_t b = 7) {
 
 template<typename T, typename ReadBitSink>
 inline T read_compressed_int(ReadBitSink&& sink, size_t b = 7) {
-    DCHECK(b > 0);
+    DCHECK_GT(b, 0U);
 
     uint64_t value = 0;
     size_t i = 0;
@@ -125,7 +125,7 @@ inline T read_ternary(ReadBitSink&& sink) {
 // Implementierung gemäß https://en.wikipedia.org/wiki/Elias_gamma_coding
 template<typename T, typename WriteBitSink>
 inline void write_elias_gamma(WriteBitSink&& sink, T v) {
-    DCHECK_GT(v, 0) << "zero cannot be gamma-encoded";
+    DCHECK_GT(v, T(0)) << "zero cannot be gamma-encoded";
 
     const auto m = bits_for(v) - 1;
     write_unary(sink, m);
@@ -145,7 +145,7 @@ inline T read_elias_gamma(ReadBitSink&& sink) {
 
 template<typename T, typename WriteBitSink>
 inline void write_elias_delta(WriteBitSink&& sink, T v) {
-    DCHECK_GT(v, 0) << "zero cannot be delta-encoded";
+    DCHECK_GT(v, T(0)) << "zero cannot be delta-encoded";
 
     auto m = bits_for(v) - 1;
     write_elias_gamma(sink, m+1);
