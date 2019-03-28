@@ -91,6 +91,7 @@ namespace tdc {
             return value << amount;
         }
     }
+    /// \endcond INTERNAL
 
     /// A portable implementation of arithmetic (sign extending) shifting.
     ///
