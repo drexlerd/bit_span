@@ -159,13 +159,13 @@ namespace int_vector {
         inline iterator begin() {
             using Base = typename int_vector::IntPtrBase<pointer>;
             auto x = bitpos2backingpos(0);
-            return pointer(Base(&this->m_vec[x.pos], x.offset, this->width()));
+            return pointer(Base(this->m_vec.data() + x.pos, x.offset, this->width()));
         }
 
         inline iterator end() {
             using Base = typename int_vector::IntPtrBase<pointer>;
             auto x = bitpos2backingpos(elem2bits(this->m_real_size));
-            return pointer(Base(&this->m_vec[x.pos], x.offset, this->width()));
+            return pointer(Base(this->m_vec.data() + x.pos, x.offset, this->width()));
         }
 
         inline reverse_iterator rbegin() {
@@ -179,13 +179,13 @@ namespace int_vector {
         inline const_iterator begin() const {
             using Base = typename int_vector::IntPtrBase<const_pointer>;
             auto x = bitpos2backingpos(0);
-            return const_pointer(Base(&this->m_vec[x.pos], x.offset, this->width()));
+            return const_pointer(Base(this->m_vec.data() + x.pos, x.offset, this->width()));
         }
 
         inline const_iterator end() const {
             using Base = typename int_vector::IntPtrBase<const_pointer>;
             auto x = bitpos2backingpos(elem2bits(this->m_real_size));
-            return const_pointer(Base(&this->m_vec[x.pos], x.offset, this->width()));
+            return const_pointer(Base(this->m_vec.data() + x.pos, x.offset, this->width()));
         }
 
         inline const_reverse_iterator rbegin() const {
