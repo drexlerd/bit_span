@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cmath>
 #include <sstream>
+#include <limits>
 
 namespace tdc {
 
